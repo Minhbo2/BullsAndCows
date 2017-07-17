@@ -1,16 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.UI;
 using UnityEngine;
 
 public class TitleBGSet : Set {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    [SerializeField]
+    private Text InstructionText;
+
+    public float Timer;
+    public float StartTimer;
+
+
+    void Start()
+    {
+        GettingIntroText();
+    }
+
+
+
+    void Update()
+    {
+        StartTimer += Time.deltaTime;
+        if (StartTimer > Timer)
+            SkipIntro();
+    }
+
+
+
+
+    private void GettingIntroText()
+    {
+        if (InstructionText)
+        {
+            string IntroText = GameManager.Inst.PrintIntro();
+            InstructionText.text = IntroText;
+        }
+    }
+
+
+
+    public void SkipIntro()
+    {
+        UISetManager.Inst.GetMainMenuSet();
+        CloseSet();
+    }
 }

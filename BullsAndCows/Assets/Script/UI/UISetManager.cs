@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class UISetManager :Set {
 
@@ -32,10 +30,21 @@ public class UISetManager :Set {
     void Init()
     {
         TBGSet = SetManager.OpenSet<TitleBGSet>();
-        TBGSet.transform.SetParent(Holder.transform, false);                          
+        TBGSet.transform.SetParent(Holder.transform, false);
+    }
+
+
+    public void GetMainMenuSet()
+    {
         MMSet = SetManager.OpenSet<MainMenuSet>();
         MMSet.transform.SetParent(Holder.transform, false);
-        //IPSet = SetManager.OpenSet<InteractivePanelsSet>();
-        //IPSet.transform.SetParent(Holder.transform, false); 
+    }
+
+
+
+    public void GetGameSet()
+    {
+        IPSet = SetManager.OpenSet<InteractivePanelsSet>();
+        IPSet.transform.SetParent(Holder.transform, false);
     }
 }
