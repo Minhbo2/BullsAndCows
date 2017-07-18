@@ -7,9 +7,10 @@ public class UISetManager :Set {
 
     [SerializeField]
     GameObject Holder;
-    InteractivePanelsSet IPSet;
-    TitleBGSet TBGSet;
-    MainMenuSet MMSet;
+
+    public InteractivePanelsSet IPSet;
+    public TitleBGSet TBGSet;
+    public MainMenuSet MMSet;
 
 
 	void Start () {
@@ -17,7 +18,7 @@ public class UISetManager :Set {
             m_Inst = this;
 
         if (Holder)
-            Init();
+            GetTitleSet();
             
 	}
 	
@@ -27,7 +28,7 @@ public class UISetManager :Set {
 	}
 
 
-    void Init()
+    void GetTitleSet()
     {
         TBGSet = SetManager.OpenSet<TitleBGSet>();
         TBGSet.transform.SetParent(Holder.transform, false);

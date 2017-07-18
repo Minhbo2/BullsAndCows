@@ -2,8 +2,8 @@
 
 public struct BullsCowsCount
 {
-    int Bulls;
-    int Cows;
+    public int Bulls;
+    public int Cows;
 
     void BCCount(int AddBulls, int AddCows)
     {
@@ -17,8 +17,8 @@ public struct BullsCowsCount
 public enum EGuessState
 {
     Invalid_Status,
-    OK,
     Not_Isogram,
+    OK,
     Wrong_Length,
     Not_Lowercase
 }
@@ -29,10 +29,14 @@ public interface IBullsAndCows {
 
     int GetMaxTry();
     int GetCurrentTry();
+    int GetBulls();
+    int GetCows();
     string SelectAHiddenWord();
+    int GetWordLength();
+    bool IsLowerCase(string Guess);
+    bool IsIsogram(string Guess);
     EGuessState CheckGuessValidity(string Guess);
-    string ExtractingGuess(string Guess);
-    string SubmitGuess(string Guess);
+    BullsCowsCount AddBullAndCow(string Guess);
     bool IsGameWon();
     void Reset();
 }

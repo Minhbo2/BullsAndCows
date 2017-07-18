@@ -1,36 +1,62 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BullsCowsGame : IBullsAndCows
 {
-    int MyMaxTries = 0;
-    int MyCurrentTry = 0;
+    int MyMaxTries;
+    int MyCurrentTry;
     bool isGameWon = false;
-    string MyHiddenWord = "";
+    string MyHiddenWord;
+   
+    BullsCowsCount BCCount;
 
-    BullsCowsCount BCGame;
+    Dictionary<int, int> WordMaxTry = new Dictionary<int, int>() {
+            { 3, 4},
+            { 4, 7},
+            { 5, 10},
+            { 6, 16},
+            { 7, 20},
+        };
 
-    private string[] HiddenWordArr = new string[4]
+    private string[] HiddenWordArr = new string[5]
     {
         "cue",
         "lake",
-        "planet",
-        "jungle"
+        "plane",
+        "jungle",
+        "jukebox"
     };
 
 
 
 
-    public int GetMaxTry() { return MyMaxTries;}
 
     public bool IsGameWon(){ return isGameWon;}
 
     public int GetCurrentTry(){ return MyCurrentTry;}
 
+    public int GetWordLength() { return MyHiddenWord.Length;}
+
+    public int GetBulls() { return BCCount.Bulls; }
+
+    public int GetCows() { return BCCount.Cows; }
+
+
+
+    public int GetMaxTry()
+    {
+        MyMaxTries = WordMaxTry[GetWordLength()];
+        return MyMaxTries;
+    }
+
+
+
 
     public void Reset()
     {
         MyHiddenWord = SelectAHiddenWord();
+        Debug.Log("You have " + GetMaxTry() + " tries.");
         MyCurrentTry = 1;
         isGameWon = false;
         
@@ -45,30 +71,85 @@ public class BullsCowsGame : IBullsAndCows
     {
         int WordIndex = UnityEngine.Random.Range(0, HiddenWordArr.Length);
         string SelectedWord = HiddenWordArr[WordIndex];
-        Debug.Log(SelectedWord);
         return SelectedWord;
     }
 
 
-    public string ExtractingGuess(string Guess)
+
+
+
+    public bool IsIsogram(string Guess)
     {
-        // TODO: grab and extracting the guess user input in the inputfield
-        return Guess;
+        bool isIsogram = true;
+        Dictionary<char, bool> WordMap = new Dictionary<char, bool>(); 
+        for (int i = 0; i < Guess.Length; i++) 
+        {
+            if (!WordMap.ContainsKey(Guess[i]))
+                WordMap.Add(Guess[i], true);
+            else
+                isIsogram = false;
+        }
+        return isIsogram;
+    }
+
+
+
+    public bool IsLowerCase(string Guess)
+    {
+        foreach(char Char in Guess)
+        {
+            if (!Char.IsLower(Char))
+                return false;
+        }
+        return true;
     }
 
 
 
     public EGuessState CheckGuessValidity(string Guess)
     {
-        return EGuessState.OK;
+        if (!IsIsogram(Guess))
+            return EGuessState.Not_Isogram;
+        else if (!IsLowerCase(Guess))
+            return EGuessState.Not_Lowercase;
+        else if (Guess.Length != GetWordLength())
+            return EGuessState.Wrong_Length;
+        else
+            return EGuessState.OK;
     }
 
 
 
 
-    public string SubmitGuess(string Guess)
+    public BullsCowsCount AddBullAndCow(string Guess)
     {
-        throw new NotImplementedException();
-    }
+        MyCurrentTry++;
+        int HiddenWordLenght = MyHiddenWord.Length;
+        BCCount = new BullsCowsCount();
 
+        for (var i = 0; i < HiddenWordLenght; i++) // loop though the hidden word length
+        {
+            for (var j = 0; j < HiddenWordLenght; j++) // assumming the guess word is same length
+            {
+                if (Guess[j] == MyHiddenWord[i]) // if char is the same
+                {
+                    if (i == j) // if they are in the same place
+                        BCCount.Bulls++;
+                    else
+                        BCCount.Cows++;
+                }
+            }
+        }
+
+        if (BCCount.Bulls == HiddenWordLenght)
+        {
+            isGameWon = true;
+        }
+        else
+        {
+            isGameWon = false;
+        }
+
+        return BCCount;        
+    }
 }
