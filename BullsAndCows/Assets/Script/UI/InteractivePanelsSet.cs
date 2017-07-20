@@ -1,4 +1,5 @@
 ﻿using UnityEngine.UI;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractivePanelsSet : Set {
@@ -6,7 +7,7 @@ public class InteractivePanelsSet : Set {
     [SerializeField]
     private InputField PlayerInputField;
     [SerializeField]
-    private GameObject TriesResultArea;
+    private ScrollviewManagerSet SMSet;
     [SerializeField]
     Text ChallengeQuestion,
         TriesRemaining,
@@ -70,21 +71,23 @@ public class InteractivePanelsSet : Set {
     public void OutputResult(int Bulls, int Cows)
     {
         GameObject TryResult = GetTryResultPrefab();
+        RectTransform ContentArea = SMSet.ContentArea;
+
         bool GameIsWon = GameManager.Inst.BCGame.IsGameWon();
         int GetCurrentTry = GameManager.Inst.BCGame.GetCurrentTry();
 
         if (!GameIsWon)
         {
-            if (TriesResultArea)
+            if (ContentArea)
             {
-                TryResult.transform.SetParent(TriesResultArea.transform, false);
+                SMSet.ManageContentAreaSize(TryResult);
+                TryResult.transform.SetParent(ContentArea.transform, false);
                 Text ResultText = TryResult.GetComponent<Text>();
-                ResultText.text = "Bulls: " + Bulls + "         Cows: " + Cows;
+                ResultText.text = GetCurrentTry + ". " + "Bulls: " + Bulls + "         Cows: " + Cows;
                 TriesRemainingText(GetCurrentTry);
             }
         }
     }
-
 
 
 
