@@ -17,25 +17,11 @@ public class WinLoseSet : Set {
 
     private void OnEnable()
     {
-        GetGameState();
+        GetGameResult();
     }
 
-    private void GetGameState()
+    private void GetGameResult()
     {
-        GM = GameManager.Inst;
-        bool IsGameWon = GM.BCGame.IsGameWon();
-        Debug.Log(IsGameWon);
-
-        if (IsGameWon)
-        {
-            HeaderText.text = "You win!";
-            HeaderBackground.color = WinColor;
-        }
-        else
-        {
-            HeaderText.text = "You lose!";
-            HeaderBackground.color = LoseColor;
-        }
 
     }
 

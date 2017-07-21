@@ -15,7 +15,7 @@ public class InteractivePanelsSet : Set {
 
     GameManager GM;
 
-
+    private string PlayerGuess;
 
 
     private void Start()
@@ -30,7 +30,7 @@ public class InteractivePanelsSet : Set {
     {
         GM = GameManager.Inst;
         int WordLength = GM.BCGame.GetWordLength();
-        ChallengeQuestion.text = "Can you guess the " + WordLength + " letters word\n I am thinking of?";
+        ChallengeQuestion.text = WordLength + " letters word";
         TriesRemainingText(GM.BCGame.GetCurrentTry());
         HintText.text = GM.BCGame.GetHint();
     }
@@ -63,7 +63,6 @@ public class InteractivePanelsSet : Set {
 
     public void PlayerGuessInput()
     {
-        string PlayerGuess;
         if (PlayerInputField == null)
         {
             Debug.Log("Error: Missing InputField");
@@ -87,19 +86,12 @@ public class InteractivePanelsSet : Set {
         int CurrentTry = GM.BCGame.GetCurrentTry();
         if (ContentArea)
         {
-            GameObject TryResult = GetTryResultPrefab();
-            SMSet.ManageContentAreaSize(TryResult);
-            TryResult.transform.SetParent(ContentArea.transform, false);
-            Text ResultText = TryResult.GetComponent<Text>();
-            ResultText.text = CurrentTry + ". " + "Bulls: " + Bulls + "         Cows: " + Cows;
+            ResultPrefabSet Result = SetManager.OpenSet<ResultPrefabSet>();
+            Result.transform.SetParent(ContentArea.transform, false);
+            Result.GetComponent<ResultPrefabSet>().GetPlayerGuess(PlayerGuess);
+            SMSet.ManageContentAreaSize(Result.gameObject);
             TriesRemainingText(CurrentTry);
         }
-    }
-
-
-    private GameObject GetTryResultPrefab()
-    {
-        return ResourcesManager.Create("Prefab/Try");
     }
 
 

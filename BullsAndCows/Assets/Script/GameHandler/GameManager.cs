@@ -44,10 +44,8 @@ public class GameManager : MonoBehaviour {
         int MaxTries   = BCGame.GetMaxTry();
         int CurrentTry = BCGame.GetCurrentTry();
 
-        if (!BCGame.IsGameWon() && CurrentTry < MaxTries)
+        if (CurrentTry < MaxTries)
             ValidateGuess(Guess);
-        else
-            UISetManager.Inst.GetWinLoseSet();
     }
 
 
@@ -91,6 +89,7 @@ public class GameManager : MonoBehaviour {
         BCGame.AddBullAndCow(Guess);
         UISetManager.Inst.IPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
         BCGame.AddToCurrentTry();
+
         return true;
     }
 }
