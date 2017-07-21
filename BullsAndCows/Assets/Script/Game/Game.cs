@@ -29,6 +29,7 @@ public class Game : MonoBehaviour {
 
     private UISetManager UISetManager;
     private GameObject GameManager;
+    private GameObject SoundManager;
 
 
     void Start()
@@ -44,9 +45,10 @@ public class Game : MonoBehaviour {
         {
             case GameState.INIT:
                 // TODO: instantiate all mains and managers
-                GameManager     = ResourcesManager.Create("Prefab/GameManager");
                 UISetManager    = SetManager.OpenSet<UISetManager>();
-                GameIsWaiting = true;
+                SoundManager    = ResourcesManager.Create("Prefab/SoundManager");
+                GameManager     = ResourcesManager.Create("Prefab/GameManager");
+                GameIsWaiting   = true;
 
                 if (GameIsWaiting)
                     ChangeState(GameState.WAITING);
@@ -57,6 +59,8 @@ public class Game : MonoBehaviour {
                 {
                     // waiting for player to press play
                 }
+                else
+                    ChangeState(GameState.INIT);
 
                 if (GameIsLoading)
                     ChangeState(GameState.LOADING);

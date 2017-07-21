@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class SetManager {
 
-    protected static SetManager m_Inst;
-
-    List<Set> Sets = new List<Set>();
+    public static SetManager m_Inst;
     Set CurrentSet;
+
+    public List<Set> Sets = new List<Set>();
 
     public static SetManager Inst
     {
@@ -36,7 +36,7 @@ public class SetManager {
             }
             else
             {
-                Debug.LogWarning(SetName + " didn't have a Set component attached, adding it for you..");
+                Debug.LogWarning(SetName + " didn't have a Set component attached, adding it now...");
                 CastedObject = SetGO.AddComponent<T>();
                 AddToSets<T>(CastedObject);
             }

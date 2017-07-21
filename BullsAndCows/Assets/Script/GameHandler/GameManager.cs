@@ -10,8 +10,6 @@ public class GameManager : MonoBehaviour {
 	void Start () {
         if (m_Inst == null)
             m_Inst = this;
-
-        PlayGame();
 	}
 
 
@@ -44,10 +42,13 @@ public class GameManager : MonoBehaviour {
     public void SubmitGuess(string Guess)
     {
         int MaxTries = BCGame.GetMaxTry();
+        int CurrentTry = BCGame.GetCurrentTry();
         bool IsGameWon = BCGame.IsGameWon();
 
-        if (!IsGameWon && BCGame.GetCurrentTry() < MaxTries)
-            Guess = ValidateGuess(Guess);
+        if (!IsGameWon && CurrentTry < MaxTries)
+            ValidateGuess(Guess);
+        else
+            UISetManager.Inst.GetWinLoseSet();
     }
 
 
@@ -58,66 +59,40 @@ public class GameManager : MonoBehaviour {
         string Message = "";
         EGuessState CurrentState = EGuessState.Invalid_Status;
         CurrentState = BCGame.CheckGuessValidity(Guess);
-
-        switch (CurrentState)
-        {
-            case EGuessState.Not_Isogram:
-                Message = "Please enter an isogram word.";
-                break;
-            case EGuessState.Not_Lowercase:
-                Message = "Please enter a lower case word.";
-                break;
-            case EGuessState.Wrong_Length:
-                Message = "Please enter a " + BCGame.GetWordLength() + " letters word.";
-                break;
-            case EGuessState.OK:
-                BCGame.AddBullAndCow(Guess);
-                CheckGameState();
-                break;
-        }
-
         InteractivePanelsSet IPSet = UISetManager.Inst.IPSet;
-        IPSet.ErrorMessageText(Message);
-        return Message;
+
+        if (CurrentState != EGuessState.OK)
+        {
+            switch (CurrentState)
+            {
+                case EGuessState.Not_Isogram:
+                    Message = "Please enter an isogram word.";
+                    break;
+                case EGuessState.Not_Lowercase:
+                    Message = "Please enter a lower case word.";
+                    break;
+                case EGuessState.Wrong_Length:
+                    Message = "Please enter a " + BCGame.GetWordLength() + " letters word.";
+                    break;
+            }
+            IPSet.ErrorMessageText(Message);
+            return Message;
+        }
+        else
+        {
+            UpdateGameState(Guess);
+            return null;
+        }
     }
 
 
 
 
-    bool CheckGameState()
+    bool UpdateGameState(string Guess)
     {
+        BCGame.AddBullAndCow(Guess);
         InteractivePanelsSet IPSet = UISetManager.Inst.IPSet;
         IPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
-        return true;
-    }
-
-
-
-    // print game summary/player condition
-    string PrintSummary()
-    {
-        string SummaryText;
-        if(BCGame.IsGameWon())
-            SummaryText = "You win!";
-        else if(BCGame.GetCurrentTry() >= BCGame.GetMaxTry())
-            SummaryText = "You lose!";
-        else
-            SummaryText = "";
-
-        string AskToPlayAgain = SummaryText + "\n Do you want to play again?";
-        return AskToPlayAgain;
-    }
-
-
-
-    // check to see if player want to start again
-    bool AskPlayAgain()
-    {
-        // TODO: chekc if player want to play again or quit
-        // if yes
-            // reset the game
-        // else 
-            // quit
         return true;
     }
 }

@@ -22,6 +22,7 @@ public class ScrollviewManagerSet : Set {
             RectTransform TryRect = Try.GetComponent<RectTransform>();
             Height += TryRect.rect.height;
             ContentArea.sizeDelta = new Vector2(0, Height);
+            VerticalScrollbar.value = 0;
         }
     }
 }

@@ -41,6 +41,5 @@ public class TitleBGSet : Set {
     public void SkipIntro()
     {
         UISetManager.Inst.GetMainMenuSet();
-        CloseSet();
     }
 }

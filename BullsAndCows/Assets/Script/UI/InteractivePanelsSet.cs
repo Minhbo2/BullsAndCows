@@ -9,9 +9,11 @@ public class InteractivePanelsSet : Set {
     [SerializeField]
     private ScrollviewManagerSet SMSet;
     [SerializeField]
-    Text ChallengeQuestion,
-        TriesRemaining,
-        ErrorMessage;
+    Text    ChallengeQuestion,
+            TriesRemaining,
+            ErrorMessage;
+
+    GameManager GM;
 
 
 
@@ -27,7 +29,7 @@ public class InteractivePanelsSet : Set {
 
     private void Init()
     {
-        GameManager GM = GameManager.Inst;
+        GM = GameManager.Inst;
         int WordLength = GM.BCGame.GetWordLength();
         ChallengeQuestion.text = "Can you guess the " + WordLength + " letters word\n I am thinking of?";
         TriesRemainingText(GM.BCGame.GetCurrentTry());
@@ -59,7 +61,7 @@ public class InteractivePanelsSet : Set {
         else
         {
             PlayerGuess = PlayerInputField.text;
-            GameManager.Inst.SubmitGuess(PlayerGuess);
+            GM.SubmitGuess(PlayerGuess);
         }
     }
 
@@ -73,8 +75,8 @@ public class InteractivePanelsSet : Set {
         GameObject TryResult = GetTryResultPrefab();
         RectTransform ContentArea = SMSet.ContentArea;
 
-        bool GameIsWon = GameManager.Inst.BCGame.IsGameWon();
-        int GetCurrentTry = GameManager.Inst.BCGame.GetCurrentTry();
+        bool GameIsWon = GM.BCGame.IsGameWon();
+        int CurrentTry = GM.BCGame.GetCurrentTry();
 
         if (!GameIsWon)
         {
@@ -83,8 +85,8 @@ public class InteractivePanelsSet : Set {
                 SMSet.ManageContentAreaSize(TryResult);
                 TryResult.transform.SetParent(ContentArea.transform, false);
                 Text ResultText = TryResult.GetComponent<Text>();
-                ResultText.text = GetCurrentTry + ". " + "Bulls: " + Bulls + "         Cows: " + Cows;
-                TriesRemainingText(GetCurrentTry);
+                ResultText.text = CurrentTry + ". " + "Bulls: " + Bulls + "         Cows: " + Cows;
+                TriesRemainingText(CurrentTry);
             }
         }
     }
@@ -94,7 +96,7 @@ public class InteractivePanelsSet : Set {
 
     string TriesRemainingText(int Try)
     {
-        string CurrentTry = "Try " + Try + " out of " + GameManager.Inst.BCGame.GetMaxTry();
+        string CurrentTry = "Try " + Try + " out of " + GM.BCGame.GetMaxTry();
         TriesRemaining.text = CurrentTry;
         return null;
     }

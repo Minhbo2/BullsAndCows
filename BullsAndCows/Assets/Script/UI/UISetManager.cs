@@ -11,6 +11,8 @@ public class UISetManager :Set {
     public InteractivePanelsSet IPSet;
     public TitleBGSet TBGSet;
     public MainMenuSet MMSet;
+    public WinLoseSet WLSet;
+
 
 
 	void Start () {
@@ -19,33 +21,45 @@ public class UISetManager :Set {
 
         if (Holder)
             GetTitleSet();
-            
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+
 
 
     void GetTitleSet()
     {
-        TBGSet = SetManager.OpenSet<TitleBGSet>();
-        TBGSet.transform.SetParent(Holder.transform, false);
+        TBGSet = GetSet(TBGSet);
     }
 
 
     public void GetMainMenuSet()
     {
-        MMSet = SetManager.OpenSet<MainMenuSet>();
-        MMSet.transform.SetParent(Holder.transform, false);
+        MMSet = GetSet(MMSet);
     }
 
 
 
     public void GetGameSet()
     {
-        IPSet = SetManager.OpenSet<InteractivePanelsSet>();
-        IPSet.transform.SetParent(Holder.transform, false);
+        IPSet = GetSet(IPSet);
+    }
+
+
+    public void GetWinLoseSet()
+    {
+        WLSet = GetSet(WLSet);
+    }
+
+
+
+    T GetSet<T>(T MySet) where T : Set
+    {
+        Set ActiveSet = Holder.GetComponentInChildren<Set>();
+        if (ActiveSet)
+            ActiveSet.CloseSet();
+
+        MySet = SetManager.OpenSet <T> ();
+        MySet.transform.SetParent(Holder.transform, false);
+
+        return MySet;
     }
 }
