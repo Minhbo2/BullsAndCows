@@ -1,5 +1,4 @@
 ﻿using UnityEngine.UI;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractivePanelsSet : Set {
@@ -11,10 +10,10 @@ public class InteractivePanelsSet : Set {
     [SerializeField]
     Text    ChallengeQuestion,
             TriesRemaining,
-            ErrorMessage;
+            ErrorMessage,
+            HintText;
 
     GameManager GM;
-
 
 
 
@@ -33,10 +32,8 @@ public class InteractivePanelsSet : Set {
         int WordLength = GM.BCGame.GetWordLength();
         ChallengeQuestion.text = "Can you guess the " + WordLength + " letters word\n I am thinking of?";
         TriesRemainingText(GM.BCGame.GetCurrentTry());
-        ErrorMessageText("");
+        HintText.text = GM.BCGame.GetHint();
     }
-
-
 
 
 
@@ -48,6 +45,20 @@ public class InteractivePanelsSet : Set {
     }
 
 
+
+
+
+    public void SubmitByBtn()
+    {
+        PlayerGuessInput();
+    }
+
+
+    public void SubmitByEnter()
+    {
+        if (!PlayerInputField.isFocused)
+            PlayerGuessInput();
+    }
 
 
     public void PlayerGuessInput()
@@ -72,26 +83,24 @@ public class InteractivePanelsSet : Set {
 
     public void OutputResult(int Bulls, int Cows)
     {
-        GameObject TryResult = GetTryResultPrefab();
         RectTransform ContentArea = SMSet.ContentArea;
-
-        bool GameIsWon = GM.BCGame.IsGameWon();
         int CurrentTry = GM.BCGame.GetCurrentTry();
-
-        if (!GameIsWon)
+        if (ContentArea)
         {
-            if (ContentArea)
-            {
-                SMSet.ManageContentAreaSize(TryResult);
-                TryResult.transform.SetParent(ContentArea.transform, false);
-                Text ResultText = TryResult.GetComponent<Text>();
-                ResultText.text = CurrentTry + ". " + "Bulls: " + Bulls + "         Cows: " + Cows;
-                TriesRemainingText(CurrentTry);
-            }
+            GameObject TryResult = GetTryResultPrefab();
+            SMSet.ManageContentAreaSize(TryResult);
+            TryResult.transform.SetParent(ContentArea.transform, false);
+            Text ResultText = TryResult.GetComponent<Text>();
+            ResultText.text = CurrentTry + ". " + "Bulls: " + Bulls + "         Cows: " + Cows;
+            TriesRemainingText(CurrentTry);
         }
     }
 
 
+    private GameObject GetTryResultPrefab()
+    {
+        return ResourcesManager.Create("Prefab/Try");
+    }
 
 
     string TriesRemainingText(int Try)
@@ -99,13 +108,5 @@ public class InteractivePanelsSet : Set {
         string CurrentTry = "Try " + Try + " out of " + GM.BCGame.GetMaxTry();
         TriesRemaining.text = CurrentTry;
         return null;
-    }
-
-
-
-
-    private GameObject GetTryResultPrefab()
-    {
-        return ResourcesManager.Create("Prefab/Try");
     }
 }

@@ -41,11 +41,10 @@ public class GameManager : MonoBehaviour {
     // get guess from player and validating it
     public void SubmitGuess(string Guess)
     {
-        int MaxTries = BCGame.GetMaxTry();
+        int MaxTries   = BCGame.GetMaxTry();
         int CurrentTry = BCGame.GetCurrentTry();
-        bool IsGameWon = BCGame.IsGameWon();
 
-        if (!IsGameWon && CurrentTry < MaxTries)
+        if (!BCGame.IsGameWon() && CurrentTry < MaxTries)
             ValidateGuess(Guess);
         else
             UISetManager.Inst.GetWinLoseSet();
@@ -59,7 +58,6 @@ public class GameManager : MonoBehaviour {
         string Message = "";
         EGuessState CurrentState = EGuessState.Invalid_Status;
         CurrentState = BCGame.CheckGuessValidity(Guess);
-        InteractivePanelsSet IPSet = UISetManager.Inst.IPSet;
 
         if (CurrentState != EGuessState.OK)
         {
@@ -75,7 +73,7 @@ public class GameManager : MonoBehaviour {
                     Message = "Please enter a " + BCGame.GetWordLength() + " letters word.";
                     break;
             }
-            IPSet.ErrorMessageText(Message);
+            UISetManager.Inst.IPSet.ErrorMessageText(Message);
             return Message;
         }
         else
@@ -91,8 +89,8 @@ public class GameManager : MonoBehaviour {
     bool UpdateGameState(string Guess)
     {
         BCGame.AddBullAndCow(Guess);
-        InteractivePanelsSet IPSet = UISetManager.Inst.IPSet;
-        IPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
+        UISetManager.Inst.IPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
+        BCGame.AddToCurrentTry();
         return true;
     }
 }

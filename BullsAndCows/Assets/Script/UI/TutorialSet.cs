@@ -1,7 +1,7 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 
-public class TitleBGSet : Set {
+public class TutorialSet : Set {
 
     [SerializeField]
     private Text InstructionText;
@@ -40,6 +40,7 @@ public class TitleBGSet : Set {
 
     public void SkipIntro()
     {
-        UISetManager.Inst.GetMainMenuSet();
+        UISetManager.Inst.GetGameSet();
+        GameManager.Inst.PlayGame();
     }
 }

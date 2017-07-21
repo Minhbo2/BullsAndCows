@@ -5,10 +5,9 @@ public struct BullsCowsCount
     public int Bulls;
     public int Cows;
 
-    void BCCount(int AddBulls, int AddCows)
+    public void BCCount()
     {
-        Bulls += AddBulls;
-        Cows += AddCows;
+
     }
 }
 
@@ -27,6 +26,8 @@ public enum EGuessState
 
 public interface IBullsAndCows {
 
+    int AddToCurrentTry();
+    string GetHint();
     int GetMaxTry();
     int GetCurrentTry();
     int GetBulls();
@@ -38,5 +39,6 @@ public interface IBullsAndCows {
     EGuessState CheckGuessValidity(string Guess);
     BullsCowsCount AddBullAndCow(string Guess);
     bool IsGameWon();
+    string SetWordHint(int WordLenght);
     void Reset();
 }

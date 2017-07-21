@@ -8,6 +8,7 @@ public class BullsCowsGame : IBullsAndCows
     int MyCurrentTry;
     bool isGameWon = false;
     string MyHiddenWord;
+    string Hint;
    
     BullsCowsCount BCCount;
 
@@ -21,16 +22,14 @@ public class BullsCowsGame : IBullsAndCows
 
     private string[] HiddenWordArr = new string[5]
     {
-        "cue",
+        "eat",
         "lake",
         "plane",
         "jungle",
         "jukebox"
     };
 
-
-
-
+    public string GetHint() { return Hint; }
 
     public bool IsGameWon(){ return isGameWon;}
 
@@ -56,6 +55,7 @@ public class BullsCowsGame : IBullsAndCows
     public void Reset()
     {
         MyHiddenWord = SelectAHiddenWord();
+        Hint = SetWordHint(MyHiddenWord.Length);
         Debug.Log("You have " + GetMaxTry() + " tries.");
         MyCurrentTry = 1;
         isGameWon = false;
@@ -123,7 +123,6 @@ public class BullsCowsGame : IBullsAndCows
 
     public BullsCowsCount AddBullAndCow(string Guess)
     {
-        MyCurrentTry++;
         int HiddenWordLenght = MyHiddenWord.Length;
         BCCount = new BullsCowsCount();
 
@@ -142,14 +141,44 @@ public class BullsCowsGame : IBullsAndCows
         }
 
         if (BCCount.Bulls == HiddenWordLenght)
-        {
             isGameWon = true;
-        }
         else
-        {
             isGameWon = false;
-        }
 
         return BCCount;        
+    }
+
+
+
+    public int AddToCurrentTry()
+    {
+        MyCurrentTry++;
+        return MyCurrentTry;
+    }
+
+
+
+    public string SetWordHint(int WordLength)
+    {
+        string Hint = "";
+        switch (WordLength)
+        {
+            case 3:
+                Hint = "Hint: An action you do to live.";
+                break;
+            case 4:
+                Hint = "Hint: A lot of water in a large pit.";
+                break;
+            case 5:
+                Hint = "Hint: Everyone likes to fly.";
+                break;
+            case 6:
+                Hint = "Hint: Hot and humid rain forest.";
+                break;
+            case 7:
+                Hint = "Hint: Old music machine at an old cafe.";
+                break;
+        }
+        return Hint;
     }
 }

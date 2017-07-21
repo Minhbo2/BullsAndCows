@@ -13,8 +13,7 @@ public class MainMenuSet : Set {
     {
         // TODO: loading datas, checking ui screens, setting game profiles
         // changing gamestate to loading
-        UISetManager.Inst.GetGameSet();
-        GameManager.Inst.PlayGame();
+        UISetManager.Inst.GetTutorialSet();
     }
 
 

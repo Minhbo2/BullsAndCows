@@ -9,7 +9,7 @@ public class UISetManager :Set {
     GameObject Holder;
 
     public InteractivePanelsSet IPSet;
-    public TitleBGSet TBGSet;
+    public TutorialSet TSet;
     public MainMenuSet MMSet;
     public WinLoseSet WLSet;
 
@@ -20,14 +20,14 @@ public class UISetManager :Set {
             m_Inst = this;
 
         if (Holder)
-            GetTitleSet();
+            GetMainMenuSet();
     }
 
 
 
-    void GetTitleSet()
+    public void GetTutorialSet()
     {
-        TBGSet = GetSet(TBGSet);
+        TSet = GetSet(TSet);
     }
 
 
