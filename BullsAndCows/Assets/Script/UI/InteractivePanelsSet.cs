@@ -71,7 +71,7 @@ public class InteractivePanelsSet : Set {
         else
         {
             PlayerGuess = PlayerInputField.text;
-            GM.SubmitGuess(PlayerGuess);
+            GM.ValidateGuess(PlayerGuess);
         }
     }
 

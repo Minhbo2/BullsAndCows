@@ -37,21 +37,8 @@ public class GameManager : MonoBehaviour {
 
 
 
-
-    // get guess from player and validating it
-    public void SubmitGuess(string Guess)
-    {
-        int MaxTries   = BCGame.GetMaxTry();
-        int CurrentTry = BCGame.GetCurrentTry();
-
-        if (CurrentTry < MaxTries)
-            ValidateGuess(Guess);
-    }
-
-
-
     // get a status for the guess 
-    string ValidateGuess(string Guess)
+    public string ValidateGuess(string Guess)
     {
         string Message = "";
         EGuessState CurrentState = EGuessState.Invalid_Status;
@@ -90,6 +77,10 @@ public class GameManager : MonoBehaviour {
         UISetManager.Inst.IPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
         BCGame.AddToCurrentTry();
 
+        int CurrentTry = BCGame.GetCurrentTry();
+        int MaxTries = BCGame.GetMaxTry();
+        if (BCGame.IsGameWon() || CurrentTry >= MaxTries)
+            UISetManager.Inst.GetWinLoseSet();
         return true;
     }
 }

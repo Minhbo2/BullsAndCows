@@ -158,6 +158,7 @@ public class BullsCowsGame : IBullsAndCows
 
 
 
+    //TODO: redo this more roburst
     public string SetWordHint(int WordLength)
     {
         string Hint = "";

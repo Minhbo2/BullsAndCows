@@ -25,8 +25,6 @@ public class ResultPrefabSet : Set {
     {
         PlayerGuess = Guess;
         SetResult();
-        // if win
-            // winloseset
         return PlayerGuess;
     }
 }

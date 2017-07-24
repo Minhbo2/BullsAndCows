@@ -8,8 +8,10 @@ public class WinLoseSet : Set {
     [SerializeField]
     private Image   HeaderBackground;
     [SerializeField]
-    private Color   WinColor,
+    private Sprite  WinColor,
                     LoseColor;
+    [SerializeField]
+    private GameObject ButtonGroup; 
 
 
     GameManager GM;
@@ -22,7 +24,17 @@ public class WinLoseSet : Set {
 
     private void GetGameResult()
     {
-
+        bool IsGameWon = GameManager.Inst.BCGame.IsGameWon();
+        if (IsGameWon)
+        {
+            HeaderText.text = "You Win!";
+            HeaderBackground.sprite = WinColor;
+        }
+        else
+        {
+            HeaderText.text = "You Lose";
+            HeaderBackground.sprite = LoseColor;
+        }
     }
 
 
