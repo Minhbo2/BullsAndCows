@@ -1,20 +1,16 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class SplashIntroSet : Set {
 
-    public Image Fader;
-    public float Timer;
-    private float MyTimer = 0;
 
-    void Update()
+    public void GetMainMenu()
     {
-
+        UISetManager.Inst.GetMainMenuSet();
     }
 
-
-    void SetAlpha()
+    public void PlayIntroSound()
     {
-
+        SoundManager.Inst.PlayIntro();
     }
 }

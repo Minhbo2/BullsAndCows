@@ -9,27 +9,29 @@ public class MainMenuSet : Set {
     [SerializeField]
     private Slider SoundSlider;
 
+
     public void PlayButton()
     {
-        // TODO: loading datas, checking ui screens, setting game profiles
-        // changing gamestate to loading
-        UISetManager.Inst.GetTutorialSet();
+        if (!GameManager.Inst.IsTutorialComplete)
+            UISetManager.Inst.GetTutorialSet();
+        else
+        {
+            UISetManager.Inst.GetGameSet();
+            GameManager.Inst.PlayGame();
+        }
     }
 
 
     public void OptionButton()
     {
-        // TODO: open option screen
-        // change game setting 
         if (OptionScreen)
             ToggleOnOff();
     }
 
     public void Quit()
     {
-
+        Application.Quit();
     }
-
 
 
     public void ToggleOnOff()
@@ -49,7 +51,13 @@ public class MainMenuSet : Set {
         if (SoundSlider)
         {
             SoundIndex = SoundSlider.value;
-            SoundManager.Inst.MyAudioSource.volume = SoundIndex;
+            SoundManager.Inst.BackgroundAudio.volume = SoundIndex;
         }
+    }
+
+
+    private void OnEnable()
+    {
+        SoundManager.Inst.PlayIngame();
     }
 }

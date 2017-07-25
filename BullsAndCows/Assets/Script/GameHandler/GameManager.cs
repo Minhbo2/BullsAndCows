@@ -6,11 +6,14 @@ public class GameManager : MonoBehaviour {
 
     public BullsCowsGame BCGame = new BullsCowsGame();
 
+    public bool IsTutorialComplete = false;
 
 	void Start () {
         if (m_Inst == null)
             m_Inst = this;
-	}
+
+        SaveData.LoadData();
+    }
 
 
     // Intro Text
@@ -58,6 +61,7 @@ public class GameManager : MonoBehaviour {
                     Message = "Please enter a " + BCGame.GetWordLength() + " letters word.";
                     break;
             }
+            SoundManager.Inst.SetAudio(SoundManager.Inst.SLose);
             UISetManager.Inst.IPSet.ErrorMessageText(Message);
             return Message;
         }

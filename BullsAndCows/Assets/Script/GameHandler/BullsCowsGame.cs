@@ -174,10 +174,10 @@ public class BullsCowsGame : IBullsAndCows
                 Hint = "Hint: Everyone likes to fly.";
                 break;
             case 6:
-                Hint = "Hint: Hot and humid rain forest.";
+                Hint = "Hint: Hot, humid, wet and trees.";
                 break;
             case 7:
-                Hint = "Hint: Old music machine at an old cafe.";
+                Hint = "Hint: Old machine at an old cafe.";
                 break;
         }
         return Hint;

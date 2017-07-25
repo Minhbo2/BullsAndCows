@@ -40,7 +40,8 @@ public class TutorialSet : Set {
 
     public void SkipIntro()
     {
+        GameManager.Inst.IsTutorialComplete = true;
+        SaveData.SavingData();
         UISetManager.Inst.GetGameSet();
-        GameManager.Inst.PlayGame();
     }
 }

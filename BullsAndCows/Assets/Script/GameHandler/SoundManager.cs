@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System;
 
-[RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour {
     public static SoundManager Inst { get{ return m_Inst;}}
     static SoundManager m_Inst;
 
     
-    public AudioSource MyAudioSource;
+    public AudioSource BackgroundAudio;
+    public AudioSource SFX;
 
     public AudioClip    SIntro,
+                        SBtn,
                         SIngame,
                         SWin,
                         SLose;
@@ -19,9 +23,31 @@ public class SoundManager : MonoBehaviour {
         if (m_Inst == null)
             m_Inst = this;
 
-        MyAudioSource = GetComponent<AudioSource>();
     }
 
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameObject ObjSelected = EventSystem.current.currentSelectedGameObject;
+            if (ObjSelected == null)
+                return;
+            else
+            {
+                bool IsButton = ObjSelected.GetComponent<Button>();
+                if (!IsButton)
+                    return;
+                else
+                    PlayButtonSFX();
+            }
+        }
+    }
+
+    public void PlayButtonSFX()
+    {
+        SetAudio(SBtn);
+    } 
 
     public void PlayIntro()
     {
@@ -30,12 +56,11 @@ public class SoundManager : MonoBehaviour {
 
     public void PlayIngame()
     {
-        SetAudio(SIngame);
+        PlayInGameMusic();
     }
 
-    public void PlayWinLose()
+    public void PlayWinLose(bool IsGameWon)
     {
-        bool IsGameWon = GameManager.Inst.BCGame.IsGameWon();
         if (IsGameWon)
             SetAudio(SWin);
         else
@@ -43,9 +68,17 @@ public class SoundManager : MonoBehaviour {
     }
 
 
+
     public void SetAudio(AudioClip NewAudio)
     {
-        MyAudioSource.clip = NewAudio;
-        MyAudioSource.Play();
+        SFX.clip = NewAudio;
+        SFX.Play();
+    }
+
+
+    public void PlayInGameMusic()
+    {
+        BackgroundAudio.clip = SIngame;
+        BackgroundAudio.Play();
     }
 }

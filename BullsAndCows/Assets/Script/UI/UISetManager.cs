@@ -12,6 +12,7 @@ public class UISetManager :Set {
     public TutorialSet TSet;
     public MainMenuSet MMSet;
     public WinLoseSet WLSet;
+    public SplashIntroSet SISet;
 
 
 
@@ -20,10 +21,15 @@ public class UISetManager :Set {
             m_Inst = this;
 
         if (Holder)
-            GetMainMenuSet();
+            Init();
     }
 
 
+
+    public void Init()
+    {
+        SISet = GetSet(SISet);
+    }
 
     public void GetTutorialSet()
     {

@@ -35,6 +35,8 @@ public class WinLoseSet : Set {
             HeaderText.text = "You Lose";
             HeaderBackground.sprite = LoseColor;
         }
+
+        SoundManager.Inst.PlayWinLose(IsGameWon);
     }
 
 

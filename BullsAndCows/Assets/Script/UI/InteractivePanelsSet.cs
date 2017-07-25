@@ -17,6 +17,7 @@ public class InteractivePanelsSet : Set {
 
     private string PlayerGuess;
 
+    public GameObject PauseScreen;
 
     private void Start()
     {
@@ -100,5 +101,39 @@ public class InteractivePanelsSet : Set {
         string CurrentTry = "Try " + Try + " out of " + GM.BCGame.GetMaxTry();
         TriesRemaining.text = CurrentTry;
         return null;
+    }
+
+
+
+
+    public void Pausing()
+    {
+        if (Time.timeScale == 1)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+
+        GetPauseScreen();
+    }
+
+    GameObject GetPauseScreen()
+    {
+        if (!PauseScreen)
+            return null;
+        else
+        {
+            bool IsActive = PauseScreen.activeInHierarchy;
+            PauseScreen.SetActive(!IsActive);
+        }
+
+        return PauseScreen;
+    }
+
+
+
+    public void BackToMainMenu()
+    {
+        Pausing();
+        UISetManager.Inst.GetMainMenuSet();
     }
 }
