@@ -32,13 +32,14 @@ public interface IBullsAndCows {
     int GetCurrentTry();
     int GetBulls();
     int GetCows();
-    string SelectAHiddenWord();
+    string SelectAHiddenWord(int WordLength);
     int GetWordLength();
     bool IsLowerCase(string Guess);
     bool IsIsogram(string Guess);
     EGuessState CheckGuessValidity(string Guess);
     BullsCowsCount AddBullAndCow(string Guess);
     bool IsGameWon();
-    string SetWordHint(int WordLenght);
-    void Reset();
+    string SetWordHint();
+    void Reset(int DifIndex);
+    int RandomWordLength(int DifIndex);
 }

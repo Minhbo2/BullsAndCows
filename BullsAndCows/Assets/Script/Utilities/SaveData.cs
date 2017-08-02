@@ -12,24 +12,24 @@ public struct Data
 
 public class SaveData  {
 
-    public static void LoadData()
+    // give a file type to load 
+    public static T LoadData<T>(string FileType)
     {
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Open(Application.persistentDataPath + "/BCGame.dat", FileMode.Open);
-        Data loadedData = (Data)bf.Deserialize(file);
+        FileStream file = File.Open(Application.persistentDataPath + FileType, FileMode.Open);
+        T LoadedData = (T)bf.Deserialize(file);
         file.Close();
 
-        GameManager.Inst.IsTutorialComplete = loadedData.IsTutorialComplete;
+        return LoadedData;
     }
 
-    public static void SavingData()
-    {
-        Data NewData = new Data();
-        NewData.IsTutorialComplete = GameManager.Inst.IsTutorialComplete;
 
+    // give a file type to save
+    public static void SavingData<T>(T SaveFile, string FileType)
+    {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/BCGame.dat");
-        bf.Serialize(file, NewData);
+        bf.Serialize(file, SaveFile);
         file.Close();
     }
 }

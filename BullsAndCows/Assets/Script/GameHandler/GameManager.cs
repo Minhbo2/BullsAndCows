@@ -7,35 +7,23 @@ public class GameManager : MonoBehaviour {
     public BullsCowsGame BCGame = new BullsCowsGame();
 
     public bool IsTutorialComplete = false;
+    
+    [Range(1, 3)] // must be between 1-3
+    public int DifficultyIndex = 2;
+
+
 
 	void Start () {
         if (m_Inst == null)
             m_Inst = this;
-
-        SaveData.LoadData();
     }
-
-
-    // Intro Text
-    public string PrintIntro()
-    {
-        string IntroMessage = "Bulls and Cows is a word guessing game.\n";
-        string IntroMessage2 = "A Bull for every letter in the right position.\n";
-        string IntroMessage3 = "A Cow for every letter not in the right position.\n";
-        string IntroMessage4 = "A word must be an ISOGRAM. \n";
-
-        string CompleteIntroMessage = IntroMessage + IntroMessage2 + IntroMessage3 + IntroMessage4;
-        return CompleteIntroMessage;
-    }
-
-
 
 
 
     // When game is ready to play
     public void PlayGame()
     {
-        BCGame.Reset();
+        BCGame.Reset(DifficultyIndex);
     }
 
 

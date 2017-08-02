@@ -12,7 +12,8 @@ public class TutorialSet : Set {
 
     void Start()
     {
-        GettingIntroText();
+        if (InstructionText)
+            InstructionText.text = PrintIntro();
     }
 
 
@@ -27,13 +28,15 @@ public class TutorialSet : Set {
 
 
 
-    private void GettingIntroText()
+    private string PrintIntro()
     {
-        if (InstructionText)
-        {
-            string IntroText = GameManager.Inst.PrintIntro();
-            InstructionText.text = IntroText;
-        }
+        string IntroMessage = "Bulls and Cows is a word guessing game. \n";
+        string IntroMessage2 = "A Bull for every correct letter \n in the right position. \n";
+        string IntroMessage3 = "A Cow for every correct letter \n in wrong position. \n";
+        string IntroMessage4 = "A word must be an ISOGRAM. \n";
+
+        string CompleteIntroMessage = IntroMessage + IntroMessage2 + IntroMessage3 + IntroMessage4;
+        return CompleteIntroMessage;
     }
 
 
@@ -41,7 +44,6 @@ public class TutorialSet : Set {
     public void SkipIntro()
     {
         GameManager.Inst.IsTutorialComplete = true;
-        SaveData.SavingData();
         UISetManager.Inst.GetGameSet();
     }
 }

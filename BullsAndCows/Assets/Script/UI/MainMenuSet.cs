@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class MainMenuSet : Set {
     [SerializeField]
@@ -8,6 +9,17 @@ public class MainMenuSet : Set {
     private GameObject ButtonsGroup;
     [SerializeField]
     private Slider SoundSlider;
+    [SerializeField]
+    private Slider DifficultySlider;
+
+
+
+    private void Start()
+    {
+        DifficultySlider.value = GameManager.Inst.DifficultyIndex;
+        SoundSlider.value = SoundManager.Inst.BackgroundAudio.volume;
+    }
+
 
 
     public void PlayButton()
@@ -15,10 +27,9 @@ public class MainMenuSet : Set {
         if (!GameManager.Inst.IsTutorialComplete)
             UISetManager.Inst.GetTutorialSet();
         else
-        {
             UISetManager.Inst.GetGameSet();
-            GameManager.Inst.PlayGame();
-        }
+
+        GameManager.Inst.PlayGame();
     }
 
 
@@ -54,6 +65,16 @@ public class MainMenuSet : Set {
             SoundManager.Inst.BackgroundAudio.volume = SoundIndex;
         }
     }
+
+
+
+    public void DifficultySetting()
+    {
+        float DifficultIndex = DifficultySlider.value;
+        int WholeIndex = Mathf.RoundToInt(DifficultIndex);
+        GameManager.Inst.DifficultyIndex = WholeIndex;
+    }
+
 
 
     private void OnEnable()

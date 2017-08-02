@@ -12,51 +12,43 @@ public class BullsCowsGame : IBullsAndCows
    
     BullsCowsCount BCCount;
 
-    Dictionary<int, int> WordMaxTry = new Dictionary<int, int>() {
+    List<string> IsogramWords = new List<string>();
+
+    Dictionary<int, int> WordToMaxTry = new Dictionary<int, int>() {
             { 3, 4},
             { 4, 7},
             { 5, 10},
             { 6, 16},
             { 7, 20},
+            { 8, 29}
         };
 
-    private string[] HiddenWordArr = new string[5]
-    {
-        "eat",
-        "lake",
-        "plane",
-        "jungle",
-        "jukebox"
-    };
+    private char[] Alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+
 
     public string GetHint() { return Hint; }
-
     public bool IsGameWon(){ return isGameWon;}
-
     public int GetCurrentTry(){ return MyCurrentTry;}
-
     public int GetWordLength() { return MyHiddenWord.Length;}
-
     public int GetBulls() { return BCCount.Bulls; }
-
     public int GetCows() { return BCCount.Cows; }
 
 
 
     public int GetMaxTry()
     {
-        MyMaxTries = WordMaxTry[GetWordLength()];
+        MyMaxTries = WordToMaxTry[GetWordLength()];
         return MyMaxTries;
     }
 
 
 
 
-    public void Reset()
+    public void Reset(int DifIndex)
     {
-        MyHiddenWord = SelectAHiddenWord();
-        Hint = SetWordHint(MyHiddenWord.Length);
-        Debug.Log("You have " + GetMaxTry() + " tries.");
+        int WordLength = RandomWordLength(DifIndex);
+        MyHiddenWord = SelectAHiddenWord(WordLength);
+        Hint = SetWordHint();
         MyCurrentTry = 1;
         isGameWon = false;
         
@@ -66,11 +58,12 @@ public class BullsCowsGame : IBullsAndCows
 
 
 
-
-    public string SelectAHiddenWord()
+    public string SelectAHiddenWord(int WordLength)
     {
-        int WordIndex = UnityEngine.Random.Range(0, HiddenWordArr.Length);
-        string SelectedWord = HiddenWordArr[WordIndex];
+        char RandomChar      = Alphabet[UnityEngine.Random.Range(0, Alphabet.Length)];
+        IsogramWords         = LoadWordsList.CharWordsWithLength(RandomChar, WordLength);
+
+        string SelectedWord  = IsogramWords[UnityEngine.Random.Range(0, IsogramWords.Count)];
         return SelectedWord;
     }
 
@@ -158,28 +151,31 @@ public class BullsCowsGame : IBullsAndCows
 
 
 
-    //TODO: redo this more roburst
-    public string SetWordHint(int WordLength)
+    public string SetWordHint()
     {
-        string Hint = "";
-        switch (WordLength)
+        char FirstChar = MyHiddenWord[0];
+        char SecondChar = MyHiddenWord[MyHiddenWord.Length - 1];
+        string Hint = "Hint: Starts with " + FirstChar + ", Ends with " + SecondChar;
+
+        return Hint;
+    }
+
+
+    public int RandomWordLength(int DifIndex)
+    {
+        int WordLength = 3;
+        switch (DifIndex)
         {
+            case 1:
+                WordLength = UnityEngine.Random.Range(3, 6);
+                break;
+            case 2:
+                WordLength = UnityEngine.Random.Range(5, 8);
+                break;
             case 3:
-                Hint = "Hint: An action you do to live.";
-                break;
-            case 4:
-                Hint = "Hint: A lot of water in a large pit.";
-                break;
-            case 5:
-                Hint = "Hint: Everyone likes to fly.";
-                break;
-            case 6:
-                Hint = "Hint: Hot, humid, wet and trees.";
-                break;
-            case 7:
-                Hint = "Hint: Old machine at an old cafe.";
+                WordLength = UnityEngine.Random.Range(6, 9);
                 break;
         }
-        return Hint;
+        return WordLength;
     }
 }
