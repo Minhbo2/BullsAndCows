@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -11,6 +11,9 @@ public class App : MonoBehaviour {
     [NonSerialized]
     public bool IsRunning = true;
 
+    private string JsonWordList = "/StreamingAssets/wordlist.json";
+
+
     // Constructor
     public App()
     {
@@ -21,16 +24,19 @@ public class App : MonoBehaviour {
 
 
     // Game entry point (this is the first thing done when the game boots)
-    public void Start()
+    public void Awake()
     {
         // TODO: Load all of your data
-
+        Init();
         // TODO: Initialize the application    
     }
 
     private void Init()
     {
         // TODO: Add your app after loading data
+        bool FileSaved = File.Exists(Application.persistentDataPath + "/isogramwordlist.dat");
+        if (!FileSaved)
+            LoadWordsList.SavedToFile(JsonWordList);
     }
 
     // Update is called once per frame

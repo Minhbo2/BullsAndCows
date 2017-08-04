@@ -19,9 +19,6 @@ public class UISetManager :Set {
 	void Start () {
         if (m_Inst == null)
             m_Inst = this;
-
-        if (Holder)
-            Init();
     }
 
 

@@ -15,7 +15,7 @@ public class SoundManager : MonoBehaviour {
                         SBtn,
                         SIngame,
                         SWin,
-                        SLose;
+                        Slose;
 
 
     private void Start()
@@ -64,7 +64,7 @@ public class SoundManager : MonoBehaviour {
         if (IsGameWon)
             SetAudio(SWin);
         else
-            SetAudio(SLose);
+            SetAudio(Slose);
     }
 
 

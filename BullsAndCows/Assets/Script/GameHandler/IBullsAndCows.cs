@@ -22,7 +22,7 @@ public enum EGuessState
 public interface IBullsAndCows {
 
     int AddToCurrentTry();
-    int GetRound();
+    bool IsRoundComplete();
     string GetHint();
     int GetMaxTry();
     int GetCurrentTry();

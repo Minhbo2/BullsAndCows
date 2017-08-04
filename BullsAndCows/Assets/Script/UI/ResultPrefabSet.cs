@@ -13,7 +13,7 @@ public class ResultPrefabSet : Set {
 
     public void SetResult()
     {
-        GameManager GM = GameManager.Inst;
+        Game GM = Game.Inst;
         Try.text = GM.BCGame.GetCurrentTry().ToString();
         GuessWord.text = PlayerGuess;
         BullIndex.text = GM.BCGame.GetBulls().ToString();

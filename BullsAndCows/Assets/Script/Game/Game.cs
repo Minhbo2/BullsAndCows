@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 
 public enum GameState
@@ -15,21 +16,31 @@ public class Game : MonoBehaviour {
 
     public GameState CurrentState = GameState.INIT;
 
-    bool    GameIsWaiting,
-            GameIsLoading,
-            GameIsRunning;
+    public bool GameIsWaiting,
+                GameIsLoading,
+                GameIsRunning;
 
 
+    public static Game Inst {get {return m_Inst;}}
     private static Game m_Inst;
-    public static Game Inst {
-        get {return m_Inst;}
-    }
 
+    private UISetManager UISetManagerScreen;
+    private SoundManager SoundManagerObj;
 
+    public BullsCowsGame BCGame = new BullsCowsGame();
 
-    private UISetManager UISetManager;
-    private GameObject GameManager;
-    private GameObject SoundManager;
+    private bool IsRoundStarted    = false;
+    public bool IsTutorialComplete = false;
+
+    public float TimeToQuit;
+    public float LevelTime;
+    private float BonusTime = 30f;
+
+    [Range(1, 3)] 
+    public int DifficultyIndex;
+
+    public int RoundIndex = 1;
+
 
 
     void Start()
@@ -44,39 +55,60 @@ public class Game : MonoBehaviour {
         switch (CurrentState)
         {
             case GameState.INIT:
-                // TODO: instantiate all mains and managers
-                UISetManager    = SetManager.OpenSet<UISetManager>();
-                SoundManager    = ResourcesManager.Create("Prefab/SoundManager");
-                GameManager     = ResourcesManager.Create("Prefab/GameManager");
-                GameIsWaiting   = true;
+                UISetManagerScreen    = SetManager.OpenSet<UISetManager>();
+                SoundManagerObj       = ResourcesManager.Create("Prefab/SoundManager").GetComponent<SoundManager>();
+                UISetManagerScreen.Init();             
+
+                BCGame.IsogramWords = LoadWordsList.GetWordsFile();
+                GameIsWaiting = true;
 
                 if (GameIsWaiting)
                     ChangeState(GameState.WAITING);
                 break;
             case GameState.WAITING:
-                // TODO: checking if states are init
-                if (GameManager && UISetManager)
-                {
-                    // waiting for player to press play
-                }
-                else
-                    ChangeState(GameState.INIT);
+                LevelTime = 300;
+                RoundIndex = 1;
+
+                bool UserInput = Input.anyKey;
+                TimeToQuit -= Time.deltaTime;
+                if (TimeToQuit <= 0)
+                    App.Inst.Quit();
+                else if (UserInput && TimeToQuit > 0)
+                    TimeToQuit = 120f;
+                
 
                 if (GameIsLoading)
                     ChangeState(GameState.LOADING);
                 break;
             case GameState.LOADING:
-                // TODO: load all game and players data
-                // setting up game logic and UI elements
-
+                PlayGame();
+                UISetManagerScreen.GetGameSet();
                 if (GameIsRunning)
                     ChangeState(GameState.RUNNING);
                 break;
             case GameState.RUNNING:
-                // TODO: check for win or lose condition 
-                // loop states for gameplay
+                if (IsRoundStarted)
+                {
+                    LevelTime -= Time.deltaTime;
+                    if (BCGame.GetCurrentTry() >= BCGame.GetMaxTry() || LevelTime < 0)
+                    {
+                        IsRoundStarted = false;
+                        UISetManagerScreen.GetSummarySet();
+                        ChangeState(GameState.WAITING);
+                    }
+                }
+
+                if (GameIsLoading)
+                    ChangeState(GameState.LOADING);
+                else if(GameIsWaiting)
+                    ChangeState(GameState.WAITING);
                 break;
         }
+
+
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            print(BCGame.MyHiddenWord);
 	}
 
 
@@ -88,5 +120,65 @@ public class Game : MonoBehaviour {
         GameIsWaiting   = false;
         GameIsLoading   = false;
         GameIsRunning   = false;
+    }
+
+
+    // When game is ready to play
+    public void PlayGame()
+    {
+        BCGame.Reset(DifficultyIndex);
+        IsRoundStarted = true;
+        GameIsRunning = true;
+    }
+
+
+
+    public string ValidateGuess(string Guess)
+    {
+        string Message = "";
+        EGuessState CurrentState = EGuessState.Invalid_Status;
+        CurrentState = BCGame.CheckGuessValidity(Guess);
+
+        if (CurrentState != EGuessState.OK)
+        {
+            switch (CurrentState)
+            {
+                case EGuessState.Not_Isogram:
+                    Message = "Please enter an isogram word.";
+                    break;
+                case EGuessState.Not_Lowercase:
+                    Message = "Please enter a lower case word.";
+                    break;
+                case EGuessState.Wrong_Length:
+                    Message = "Please enter a " + BCGame.GetWordLength() + " letters word.";
+                    break;
+            }
+            SoundManagerObj.SetAudio(SoundManagerObj.Slose);
+            UISetManager.Inst.GPSet.ErrorMessageText(Message);
+            return Message;
+        }
+        else
+        {
+            UpdateGameState(Guess);
+            return null;
+        }
+    }
+
+
+
+    bool UpdateGameState(string Guess)
+    {
+        BCGame.AddBullAndCow(Guess);
+        UISetManager.Inst.GPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
+        BCGame.AddToCurrentTry();
+
+        if (BCGame.IsRoundComplete()) // compare after, if changes then reset
+        {
+            UISetManagerScreen.GPSet.Pausing(UISetManagerScreen.GPSet.ContinuePanel);
+            LevelTime += BonusTime;
+            RoundIndex++;
+        }
+
+        return true;
     }
 }

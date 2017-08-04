@@ -16,7 +16,7 @@ public class MainMenuSet : Set {
 
     private void Start()
     {
-        DifficultySlider.value = GameManager.Inst.DifficultyIndex;
+        DifficultySlider.value = Game.Inst.DifficultyIndex;
         SoundSlider.value = SoundManager.Inst.BackgroundAudio.volume;
     }
 
@@ -24,12 +24,10 @@ public class MainMenuSet : Set {
 
     public void PlayButton()
     {
-        if (!GameManager.Inst.IsTutorialComplete)
+        if (!Game.Inst.IsTutorialComplete)
             UISetManager.Inst.GetTutorialSet();
         else
-            UISetManager.Inst.GetGameSet();
-
-        GameManager.Inst.PlayGame();
+            Game.Inst.GameIsLoading = true;
     }
 
 
@@ -41,7 +39,7 @@ public class MainMenuSet : Set {
 
     public void Quit()
     {
-        Application.Quit();
+        App.Inst.Quit();
     }
 
 
@@ -72,7 +70,7 @@ public class MainMenuSet : Set {
     {
         float DifficultIndex = DifficultySlider.value;
         int WholeIndex = Mathf.RoundToInt(DifficultIndex);
-        GameManager.Inst.DifficultyIndex = WholeIndex;
+        Game.Inst.DifficultyIndex = WholeIndex;
     }
 
 

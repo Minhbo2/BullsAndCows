@@ -13,21 +13,18 @@ public class SummarySet : Set {
 
     private void GetGameResult()
     {
-        int RoundIndex = GameManager.Inst.BCGame.GetRound();
-        SumText.text = "Rounds Completed: " + (RoundIndex + 1);
+        int RoundIndex = Game.Inst.RoundIndex;
+        SumText.text = "Rounds Completed: " + RoundIndex;
     }
 
 
     public void PlayAgain()
     {
-        GameManager.Inst.ResetTimeRound();
-        GameManager.Inst.PlayGame();
-        UISetManager.Inst.GetGameSet();
+        Game.Inst.GameIsLoading = true;
     }
 
     public void Quit()
     {
-        GameManager.Inst.ResetTimeRound();
         UISetManager.Inst.GetMainMenuSet();
     }
 }

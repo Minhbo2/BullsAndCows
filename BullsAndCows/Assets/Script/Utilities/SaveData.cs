@@ -28,7 +28,7 @@ public class SaveData  {
     public static void SavingData<T>(T SaveFile, string FileType)
     {
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/BCGame.dat");
+        FileStream file = File.Create(Application.persistentDataPath + FileType);
         bf.Serialize(file, SaveFile);
         file.Close();
     }

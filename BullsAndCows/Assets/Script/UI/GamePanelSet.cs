@@ -16,7 +16,7 @@ public class GamePanelSet : Set {
             Timer,
             HintText;
 
-    GameManager GM;
+    Game GM;
 
     private string PlayerGuess;
 
@@ -35,7 +35,7 @@ public class GamePanelSet : Set {
 
     private void Update()
     {
-        int CurrentTime = Mathf.RoundToInt(GameManager.Inst.LevelTime);
+        int CurrentTime = Mathf.RoundToInt(Game.Inst.LevelTime);
         Timer.text = "Time Remaining: " + CurrentTime;
     }
 
@@ -43,7 +43,7 @@ public class GamePanelSet : Set {
 
     void Init()
     {
-        GM = GameManager.Inst;
+        GM = Game.Inst;
         int WordLength = GM.BCGame.GetWordLength();
         LettersWordText.text = WordLength + " letters word";
         TriesRemain(GM.BCGame.GetCurrentTry());
@@ -55,7 +55,7 @@ public class GamePanelSet : Set {
 
     string RoundIndex()
     {
-        string RoundText = "Round: " + (GM.BCGame.GetRound() + 1);
+        string RoundText = "Round: " + GM.RoundIndex;
         return RoundText;
     }
 
@@ -154,14 +154,16 @@ public class GamePanelSet : Set {
     {
         Pausing(PauseScreen);
         UISetManager.Inst.GetSummarySet();
+        Game.Inst.GameIsWaiting = true;
     }
 
 
     public void ContinueRound()
     {
+        Game.Inst.GameIsLoading = true;
         Pausing(ContinuePanel);
-        Init();
         foreach (GameObject rp in RPList)
             Destroy(rp);
+        Init();
     }
 }

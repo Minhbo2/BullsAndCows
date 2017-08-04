@@ -5,29 +5,27 @@ public class BullsCowsGame : IBullsAndCows
 {
     int MyMaxTries;
     int MyCurrentTry;
-    bool LevelComplete;
-    string MyHiddenWord;
+    bool RoundComplete;
     string Hint;
 
-    int Round;
+    public string MyHiddenWord;
 
     BullsCowsCount BCCount;
 
-    List<string> IsogramWords = new List<string>();
+    public List<string> IsogramWords = new List<string>();
 
     Dictionary<int, int> WordToMaxTry = new Dictionary<int, int>() {
-            { 3, 4},
             { 4, 7},
             { 5, 10},
             { 6, 16},
             { 7, 20},
-            { 8, 29}
+            { 8, 26},
         };
 
     private char[] Alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
 
-    public int GetRound() { return Round; }
+    public bool IsRoundComplete() { return RoundComplete; }
     public string GetHint() { return Hint; }
     public int GetCurrentTry(){ return MyCurrentTry;}
     public int GetWordLength() { return MyHiddenWord.Length;}
@@ -50,6 +48,7 @@ public class BullsCowsGame : IBullsAndCows
         MyHiddenWord = SelectAHiddenWord(WordLength);
         Hint = SetWordHint();
         MyCurrentTry = 1;
+        RoundComplete = false;
     }
 
 
@@ -57,10 +56,32 @@ public class BullsCowsGame : IBullsAndCows
 
     public string SelectAHiddenWord(int WordLength)
     {
-        char RandomChar      = Alphabet[UnityEngine.Random.Range(0, Alphabet.Length)];
-        IsogramWords         = LoadWordsList.CharWordsWithLength(RandomChar, WordLength);
-        string SelectedWord  = IsogramWords[UnityEngine.Random.Range(0, IsogramWords.Count)];
+        char RandomChar         = Alphabet[UnityEngine.Random.Range(0, Alphabet.Length)];
+        List<string> CharWords  = new List<string>();
+        bool IsComplete         = false;
+        int WordIndex           = 0;
 
+        while (!IsComplete)
+        {
+            if (WordIndex >= IsogramWords.Count)
+                break;
+            else
+            {
+                char CurrentChar = IsogramWords[WordIndex][0];
+                if (CurrentChar != RandomChar && CharWords.Count > 0) // after adding, if the next word doesnt start with char then finish
+                    IsComplete = true;
+                else if (CurrentChar == RandomChar && IsogramWords[WordIndex].Length == WordLength) // go through list, once find, add to list
+                {
+                    CharWords.Add(IsogramWords[WordIndex]);
+                    IsComplete = false;
+                }
+            }
+            WordIndex++;
+        }
+
+        int RandomIndex      = UnityEngine.Random.Range(0, CharWords.Count);
+        UnityEngine.Debug.Log(CharWords.Count + " " + RandomIndex);
+        string SelectedWord  = CharWords[RandomIndex];
         return SelectedWord;
     }
 
@@ -131,7 +152,7 @@ public class BullsCowsGame : IBullsAndCows
         }
 
         if (BCCount.Bulls == HiddenWordLenght)
-            Round++;
+            RoundComplete = true;
 
         return BCCount;        
     }
@@ -158,19 +179,8 @@ public class BullsCowsGame : IBullsAndCows
 
     public int RandomWordLength(int DifIndex)
     {
-        int WordLength = 3;
-        switch (DifIndex)
-        {
-            case 1:
-                WordLength = UnityEngine.Random.Range(3, 6);
-                break;
-            case 2:
-                WordLength = UnityEngine.Random.Range(5, 8);
-                break;
-            case 3:
-                WordLength = UnityEngine.Random.Range(6, 9);
-                break;
-        }
-        return WordLength;
+        int FirstIndex = DifIndex + 3;
+        int SecondIndex = FirstIndex + 3; 
+        return UnityEngine.Random.Range(FirstIndex, SecondIndex);// (4,7)(5,8)(6,9)
     }
 }
