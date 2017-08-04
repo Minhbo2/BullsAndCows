@@ -8,10 +8,10 @@ public class UISetManager :Set {
     [SerializeField]
     GameObject Holder;
 
-    public InteractivePanelsSet IPSet;
+    public GamePanelSet GPSet;
     public TutorialSet TSet;
     public MainMenuSet MMSet;
-    public WinLoseSet WLSet;
+    public SummarySet SumSet;
     public SplashIntroSet SISet;
 
 
@@ -46,13 +46,13 @@ public class UISetManager :Set {
 
     public void GetGameSet()
     {
-        IPSet = GetSet(IPSet);
+        GPSet = GetSet(GPSet);
     }
 
 
-    public void GetWinLoseSet()
+    public void GetSummarySet()
     {
-        WLSet = GetSet(WLSet);
+        SumSet = GetSet(SumSet);
     }
 
 

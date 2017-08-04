@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+
 
 public class GameManager : MonoBehaviour {
     public static GameManager Inst { get { return m_Inst; } }
@@ -6,8 +8,14 @@ public class GameManager : MonoBehaviour {
 
     public BullsCowsGame BCGame = new BullsCowsGame();
 
+    private bool IsRoundStarted = false;
+
     public bool IsTutorialComplete = false;
-    
+
+    public float LevelTime;
+    private float BonusTime = 30f;
+
+
     [Range(1, 3)] // must be between 1-3
     public int DifficultyIndex = 2;
 
@@ -20,10 +28,34 @@ public class GameManager : MonoBehaviour {
 
 
 
+
+    private void Update()
+    {
+        if(IsRoundStarted)
+        {
+            LevelTime -= Time.deltaTime;
+            if (BCGame.GetCurrentTry() >= BCGame.GetMaxTry() || LevelTime < 0)
+            {
+                IsRoundStarted = false;
+                UISetManager.Inst.GetSummarySet();     
+            }
+        }
+    }
+
+
+
+    public void ResetTimeRound()
+    {
+        LevelTime = 300;
+    }
+
+
+
     // When game is ready to play
     public void PlayGame()
     {
         BCGame.Reset(DifficultyIndex);
+        IsRoundStarted = true;
     }
 
 
@@ -50,7 +82,7 @@ public class GameManager : MonoBehaviour {
                     break;
             }
             SoundManager.Inst.SetAudio(SoundManager.Inst.SLose);
-            UISetManager.Inst.IPSet.ErrorMessageText(Message);
+            UISetManager.Inst.GPSet.ErrorMessageText(Message);
             return Message;
         }
         else
@@ -61,18 +93,20 @@ public class GameManager : MonoBehaviour {
     }
 
 
-
-
     bool UpdateGameState(string Guess)
     {
+        int RoundIndex = BCGame.GetRound(); // get round index before adding
         BCGame.AddBullAndCow(Guess);
-        UISetManager.Inst.IPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
+        UISetManager.Inst.GPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
         BCGame.AddToCurrentTry();
 
-        int CurrentTry = BCGame.GetCurrentTry();
-        int MaxTries = BCGame.GetMaxTry();
-        if (BCGame.IsGameWon() || CurrentTry >= MaxTries)
-            UISetManager.Inst.GetWinLoseSet();
+        if (RoundIndex < BCGame.GetRound()) // compare after, if changes then reset
+        {
+            UISetManager.Inst.GPSet.Pausing(UISetManager.Inst.GPSet.ContinuePanel);
+            LevelTime += BonusTime;
+            PlayGame();
+        }
+
         return true;
     }
 }

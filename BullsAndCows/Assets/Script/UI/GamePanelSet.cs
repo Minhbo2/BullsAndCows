@@ -1,16 +1,19 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class InteractivePanelsSet : Set {
+public class GamePanelSet : Set {
 
     [SerializeField]
     private InputField PlayerInputField;
     [SerializeField]
     private ScrollviewManagerSet SMSet;
     [SerializeField]
-    Text    ChallengeQuestion,
+    Text    LettersWordText,
             TriesRemaining,
             ErrorMessage,
+            RoundText,
+            Timer,
             HintText;
 
     GameManager GM;
@@ -18,6 +21,10 @@ public class InteractivePanelsSet : Set {
     private string PlayerGuess;
 
     public GameObject PauseScreen;
+    public GameObject ContinuePanel;
+
+    List<GameObject> RPList = new List<GameObject>();
+
 
     private void Start()
     {
@@ -26,16 +33,31 @@ public class InteractivePanelsSet : Set {
 
 
 
+    private void Update()
+    {
+        int CurrentTime = Mathf.RoundToInt(GameManager.Inst.LevelTime);
+        Timer.text = "Time Remaining: " + CurrentTime;
+    }
 
-    private void Init()
+
+
+    void Init()
     {
         GM = GameManager.Inst;
         int WordLength = GM.BCGame.GetWordLength();
-        ChallengeQuestion.text = WordLength + " letters word";
-        TriesRemainingText(GM.BCGame.GetCurrentTry());
+        LettersWordText.text = WordLength + " letters word";
+        TriesRemain(GM.BCGame.GetCurrentTry());
         HintText.text = GM.BCGame.GetHint();
+        RoundText.text = RoundIndex();
     }
 
+
+
+    string RoundIndex()
+    {
+        string RoundText = "Round: " + (GM.BCGame.GetRound() + 1);
+        return RoundText;
+    }
 
 
 
@@ -78,25 +100,23 @@ public class InteractivePanelsSet : Set {
 
 
 
-
-
-
     public void OutputResult(int Bulls, int Cows)
     {
         RectTransform ContentArea = SMSet.ContentArea;
-        int CurrentTry = GM.BCGame.GetCurrentTry();
         if (ContentArea)
         {
             ResultPrefabSet Result = SetManager.OpenSet<ResultPrefabSet>();
+            RPList.Add(Result.gameObject);
             Result.transform.SetParent(ContentArea.transform, false);
             Result.GetComponent<ResultPrefabSet>().GetPlayerGuess(PlayerGuess);
             SMSet.ManageContentAreaSize(Result.gameObject);
-            TriesRemainingText(CurrentTry);
+            TriesRemain(GM.BCGame.GetCurrentTry());
         }
     }
 
 
-    string TriesRemainingText(int Try)
+
+    string TriesRemain(int Try)
     {
         string CurrentTry = "Try " + Try + " out of " + GM.BCGame.GetMaxTry();
         TriesRemaining.text = CurrentTry;
@@ -105,35 +125,43 @@ public class InteractivePanelsSet : Set {
 
 
 
-
-    public void Pausing()
+    public void Pausing(GameObject Screen)
     {
         if (Time.timeScale == 1)
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
 
-        GetPauseScreen();
+        GetScreen(Screen);
     }
 
-    GameObject GetPauseScreen()
+
+    GameObject GetScreen(GameObject Screen)
     {
-        if (!PauseScreen)
+        if (!Screen)
             return null;
         else
         {
-            bool IsActive = PauseScreen.activeInHierarchy;
-            PauseScreen.SetActive(!IsActive);
+            bool IsActive = Screen.activeInHierarchy;
+            Screen.SetActive(!IsActive);
         }
-
-        return PauseScreen;
+        return Screen;
     }
 
 
 
-    public void BackToMainMenu()
+    public void QuitToSummary()
     {
-        Pausing();
-        UISetManager.Inst.GetMainMenuSet();
+        Pausing(PauseScreen);
+        UISetManager.Inst.GetSummarySet();
+    }
+
+
+    public void ContinueRound()
+    {
+        Pausing(ContinuePanel);
+        Init();
+        foreach (GameObject rp in RPList)
+            Destroy(rp);
     }
 }

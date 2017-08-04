@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class BullsCowsGame : IBullsAndCows
 {
     int MyMaxTries;
     int MyCurrentTry;
-    bool isGameWon = false;
+    bool LevelComplete;
     string MyHiddenWord;
     string Hint;
-   
+
+    int Round;
+
     BullsCowsCount BCCount;
 
     List<string> IsogramWords = new List<string>();
@@ -23,16 +24,15 @@ public class BullsCowsGame : IBullsAndCows
             { 8, 29}
         };
 
-    private char[] Alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+    private char[] Alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
 
+    public int GetRound() { return Round; }
     public string GetHint() { return Hint; }
-    public bool IsGameWon(){ return isGameWon;}
     public int GetCurrentTry(){ return MyCurrentTry;}
     public int GetWordLength() { return MyHiddenWord.Length;}
     public int GetBulls() { return BCCount.Bulls; }
     public int GetCows() { return BCCount.Cows; }
-
 
 
     public int GetMaxTry()
@@ -50,9 +50,6 @@ public class BullsCowsGame : IBullsAndCows
         MyHiddenWord = SelectAHiddenWord(WordLength);
         Hint = SetWordHint();
         MyCurrentTry = 1;
-        isGameWon = false;
-        
-        return;
     }
 
 
@@ -62,8 +59,8 @@ public class BullsCowsGame : IBullsAndCows
     {
         char RandomChar      = Alphabet[UnityEngine.Random.Range(0, Alphabet.Length)];
         IsogramWords         = LoadWordsList.CharWordsWithLength(RandomChar, WordLength);
-
         string SelectedWord  = IsogramWords[UnityEngine.Random.Range(0, IsogramWords.Count)];
+
         return SelectedWord;
     }
 
@@ -134,9 +131,7 @@ public class BullsCowsGame : IBullsAndCows
         }
 
         if (BCCount.Bulls == HiddenWordLenght)
-            isGameWon = true;
-        else
-            isGameWon = false;
+            Round++;
 
         return BCCount;        
     }
