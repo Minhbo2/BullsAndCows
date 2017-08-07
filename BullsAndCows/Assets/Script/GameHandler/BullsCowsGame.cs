@@ -15,6 +15,7 @@ public class BullsCowsGame : IBullsAndCows
     public List<string> IsogramWords = new List<string>();
 
     Dictionary<int, int> WordToMaxTry = new Dictionary<int, int>() {
+            { 3, 5},
             { 4, 7},
             { 5, 10},
             { 6, 16},
@@ -179,8 +180,7 @@ public class BullsCowsGame : IBullsAndCows
 
     public int RandomWordLength(int DifIndex)
     {
-        int FirstIndex = DifIndex + 3;
-        int SecondIndex = FirstIndex + 3; 
-        return UnityEngine.Random.Range(FirstIndex, SecondIndex);// (4,7)(5,8)(6,9)
+        int WordLength = DifIndex + 2;
+        return WordLength;
     }
 }

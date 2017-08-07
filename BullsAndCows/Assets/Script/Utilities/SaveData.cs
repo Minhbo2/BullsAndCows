@@ -4,9 +4,21 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 [Serializable]
-public struct Data
+public class Data
 {
+    public int Round;
     public bool IsTutorialComplete;
+
+    public Data()
+    {
+
+    }
+
+    public Data(int RoundCompleted, bool IsComplete)
+    {
+        Round = RoundCompleted;
+        IsTutorialComplete = IsComplete;
+    }
 }
 
 

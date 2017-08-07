@@ -15,6 +15,13 @@ public class SummarySet : Set {
     {
         int RoundIndex = Game.Inst.RoundIndex;
         SumText.text = "Rounds Completed: " + RoundIndex;
+        Data NewData = Game.Inst.NewData;
+        if (RoundIndex > NewData.Round)
+        {
+            NewData = new Data(RoundIndex, Game.Inst.IsTutorialComplete);
+            Game.Inst.HighestRoundCompleted = RoundIndex;
+            SaveData.SavingData(NewData, "bcgame.dat");
+        }
     }
 
 

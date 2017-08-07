@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 
 public enum GameState
@@ -40,6 +41,9 @@ public class Game : MonoBehaviour {
     public int DifficultyIndex;
 
     public int RoundIndex = 1;
+    public int HighestRoundCompleted;
+
+    public Data NewData;
 
 
 
@@ -54,10 +58,20 @@ public class Game : MonoBehaviour {
 	void Update () {
         switch (CurrentState)
         {
-            case GameState.INIT:
+            case GameState.INIT: // setting up all managers and game datas
                 UISetManagerScreen    = SetManager.OpenSet<UISetManager>();
                 SoundManagerObj       = ResourcesManager.Create("Prefab/SoundManager").GetComponent<SoundManager>();
-                UISetManagerScreen.Init();             
+                UISetManagerScreen.Init();
+
+                bool FileExist = File.Exists(Application.persistentDataPath + "bcgame.dat");
+                if (FileExist)
+                {
+                    NewData               = new Data();
+                    NewData               = SaveData.LoadData<Data>("bcgame.dat");
+                    HighestRoundCompleted = NewData.Round;
+                    IsTutorialComplete    = NewData.IsTutorialComplete;
+                }
+
 
                 BCGame.IsogramWords = LoadWordsList.GetWordsFile();
                 GameIsWaiting = true;
@@ -65,12 +79,12 @@ public class Game : MonoBehaviour {
                 if (GameIsWaiting)
                     ChangeState(GameState.WAITING);
                 break;
-            case GameState.WAITING:
+            case GameState.WAITING: // waiting for input from player, reset gameplay
                 LevelTime = 300;
                 RoundIndex = 1;
 
                 bool UserInput = Input.anyKey;
-                TimeToQuit -= Time.deltaTime;
+                TimeToQuit    -= Time.deltaTime;
                 if (TimeToQuit <= 0)
                     App.Inst.Quit();
                 else if (UserInput && TimeToQuit > 0)
@@ -80,13 +94,13 @@ public class Game : MonoBehaviour {
                 if (GameIsLoading)
                     ChangeState(GameState.LOADING);
                 break;
-            case GameState.LOADING:
+            case GameState.LOADING: // get neccessary datas for the game to start
                 PlayGame();
                 UISetManagerScreen.GetGameSet();
                 if (GameIsRunning)
                     ChangeState(GameState.RUNNING);
                 break;
-            case GameState.RUNNING:
+            case GameState.RUNNING: // check if win or lose, save data
                 if (IsRoundStarted)
                 {
                     LevelTime -= Time.deltaTime;
@@ -128,7 +142,7 @@ public class Game : MonoBehaviour {
     {
         BCGame.Reset(DifficultyIndex);
         IsRoundStarted = true;
-        GameIsRunning = true;
+        GameIsRunning  = true;
     }
 
 

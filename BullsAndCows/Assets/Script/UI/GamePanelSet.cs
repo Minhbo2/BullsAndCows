@@ -37,6 +37,10 @@ public class GamePanelSet : Set {
     {
         int CurrentTime = Mathf.RoundToInt(Game.Inst.LevelTime);
         Timer.text = "Time Remaining: " + CurrentTime;
+
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            LettersWordText.text = GM.BCGame.MyHiddenWord;
     }
 
 
@@ -77,11 +81,6 @@ public class GamePanelSet : Set {
     }
 
 
-    public void SubmitByEnter()
-    {
-        if (!PlayerInputField.isFocused)
-            PlayerGuessInput();
-    }
 
 
     public void PlayerGuessInput()
