@@ -16,20 +16,17 @@ public class GamePanelSet : Set {
             Timer,
             HintText;
 
-    Game GM;
+    Game GM = Game.Inst;
 
     private string PlayerGuess;
 
     public GameObject PauseScreen;
     public GameObject ContinuePanel;
 
-    List<GameObject> RPList = new List<GameObject>();
+    [SerializeField]
+    List<ResultPrefabSet> RPList = null;
 
 
-    private void Start()
-    {
-        Init();
-    }
 
 
 
@@ -38,16 +35,20 @@ public class GamePanelSet : Set {
         int CurrentTime = Mathf.RoundToInt(Game.Inst.LevelTime);
         Timer.text = "Time Remaining: " + CurrentTime;
 
-
+#if UNITY_EDITOR
+        // Dev Hack
         if (Input.GetKeyDown(KeyCode.Space))
             LettersWordText.text = GM.BCGame.MyHiddenWord;
+#endif
     }
 
 
 
     void Init()
     {
-        GM = Game.Inst;
+        PlayerInputField.Select();
+        PlayerInputField.text = "";
+        ClearingResults();
         int WordLength = GM.BCGame.GetWordLength();
         LettersWordText.text = WordLength + " letters word";
         TriesRemain(GM.BCGame.GetCurrentTry());
@@ -57,9 +58,19 @@ public class GamePanelSet : Set {
 
 
 
+    private void ClearingResults()
+    {
+        if (RPList == null) { return; }
+        foreach (ResultPrefabSet rp in RPList)
+            Destroy(rp.gameObject);
+        RPList = null;
+    }
+
+
+
     string RoundIndex()
     {
-        string RoundText = "Round: " + GM.RoundIndex;
+        string RoundText = "Round: " + GM.BCGame.GetRound();
         return RoundText;
     }
 
@@ -101,13 +112,16 @@ public class GamePanelSet : Set {
 
     public void OutputResult(int Bulls, int Cows)
     {
+        // make sure to always have a list 
+        if (RPList == null){ RPList = new List<ResultPrefabSet>(); }
+
         RectTransform ContentArea = SMSet.ContentArea;
         if (ContentArea)
         {
-            ResultPrefabSet Result = SetManager.OpenSet<ResultPrefabSet>();
-            RPList.Add(Result.gameObject);
+            ResultPrefabSet Result = ResourcesManager.Create("Sets/ResultPrefabSet").GetComponent<ResultPrefabSet>();
             Result.transform.SetParent(ContentArea.transform, false);
-            Result.GetComponent<ResultPrefabSet>().GetPlayerGuess(PlayerGuess);
+            RPList.Add(Result);
+            Result.GetPlayerGuess(PlayerGuess);
             SMSet.ManageContentAreaSize(Result.gameObject);
             TriesRemain(GM.BCGame.GetCurrentTry());
         }
@@ -152,7 +166,7 @@ public class GamePanelSet : Set {
     public void QuitToSummary()
     {
         Pausing(PauseScreen);
-        UISetManager.Inst.GetSummarySet();
+        Game.Inst.uiSetManager.NextActiveSet("Summary");
         Game.Inst.GameIsWaiting = true;
     }
 
@@ -161,8 +175,13 @@ public class GamePanelSet : Set {
     {
         Game.Inst.GameIsLoading = true;
         Pausing(ContinuePanel);
-        foreach (GameObject rp in RPList)
-            Destroy(rp);
+        Init();
+    }
+
+
+
+    private void OnEnable()
+    {
         Init();
     }
 }

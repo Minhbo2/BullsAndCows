@@ -4,6 +4,6 @@ public class Set : MonoBehaviour {
 
     public void CloseSet()
     {
-        SetManager.CloseSet(this);
+        SetManager.ToggleSet(this);
     }
 }

@@ -17,7 +17,7 @@ public class MainMenuSet : Set {
     private void Start()
     {
         DifficultySlider.value = Game.Inst.DifficultyIndex;
-        SoundSlider.value = SoundManager.Inst.BackgroundAudio.volume;
+        SoundSlider.value = Game.Inst.soundManager.BackgroundAudio.volume;
     }
 
 
@@ -25,7 +25,7 @@ public class MainMenuSet : Set {
     public void PlayButton()
     {
         if (!Game.Inst.IsTutorialComplete)
-            UISetManager.Inst.GetTutorialSet();
+            Game.Inst.uiSetManager.NextActiveSet("Tutorial");
         else
             Game.Inst.GameIsLoading = true;
     }
@@ -60,7 +60,7 @@ public class MainMenuSet : Set {
         if (SoundSlider)
         {
             SoundIndex = SoundSlider.value;
-            SoundManager.Inst.BackgroundAudio.volume = SoundIndex;
+            Game.Inst.soundManager.BackgroundAudio.volume = SoundIndex;
         }
     }
 
@@ -77,6 +77,6 @@ public class MainMenuSet : Set {
 
     private void OnEnable()
     {
-        SoundManager.Inst.PlayIngame();
+        Game.Inst.soundManager.PlayIngame();
     }
 }

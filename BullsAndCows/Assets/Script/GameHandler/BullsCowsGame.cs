@@ -1,13 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class BullsCowsGame : IBullsAndCows
+
+public struct BullsCowsCount
+{
+    public int Bulls;
+    public int Cows;
+}
+
+
+
+public enum EGuessState
+{
+    Invalid_Status,
+    Not_Isogram,
+    OK,
+    Wrong_Length,
+    Not_Lowercase
+}
+
+
+
+
+public class BullsCowsGame 
 {
     int MyMaxTries;
     int MyCurrentTry;
     bool RoundComplete;
     string Hint;
 
+    public int CurrentRound;
     public string MyHiddenWord;
 
     BullsCowsCount BCCount;
@@ -32,6 +54,9 @@ public class BullsCowsGame : IBullsAndCows
     public int GetWordLength() { return MyHiddenWord.Length;}
     public int GetBulls() { return BCCount.Bulls; }
     public int GetCows() { return BCCount.Cows; }
+    public int GetRound() { return CurrentRound; }
+    public int RoundCompleted() { return CurrentRound++; }
+    public int AddToCurrentTry() { return MyCurrentTry++; }
 
 
     public int GetMaxTry()
@@ -159,12 +184,6 @@ public class BullsCowsGame : IBullsAndCows
     }
 
 
-
-    public int AddToCurrentTry()
-    {
-        MyCurrentTry++;
-        return MyCurrentTry;
-    }
 
 
 

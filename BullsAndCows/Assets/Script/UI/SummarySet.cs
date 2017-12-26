@@ -13,7 +13,7 @@ public class SummarySet : Set {
 
     private void GetGameResult()
     {
-        int RoundIndex = Game.Inst.RoundIndex;
+        int RoundIndex = Game.Inst.BCGame.GetRound();
         SumText.text = "Rounds Completed: " + RoundIndex;
         Data NewData = Game.Inst.NewData;
         if (RoundIndex > NewData.Round)
@@ -32,6 +32,6 @@ public class SummarySet : Set {
 
     public void Quit()
     {
-        UISetManager.Inst.GetMainMenuSet();
+        Game.Inst.uiSetManager.NextActiveSet("Main Menu");
     }
 }

@@ -3,10 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 
-public class SoundManager : MonoBehaviour {
-    public static SoundManager Inst { get{ return m_Inst;}}
-    static SoundManager m_Inst;
-
+public class SoundManager : MonoBehaviour { 
     
     public AudioSource BackgroundAudio;
     public AudioSource SFX;
@@ -15,15 +12,9 @@ public class SoundManager : MonoBehaviour {
                         SBtn,
                         SIngame,
                         SWin,
-                        Slose;
+                        Slose,
+                        SError;
 
-
-    private void Start()
-    {
-        if (m_Inst == null)
-            m_Inst = this;
-
-    }
 
 
     private void Update()

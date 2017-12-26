@@ -6,11 +6,11 @@ public class SplashIntroSet : Set {
 
     public void GetMainMenu()
     {
-        UISetManager.Inst.GetMainMenuSet();
+        Game.Inst.uiSetManager.NextActiveSet("Main Menu");
     }
 
     public void PlayIntroSound()
     {
-        SoundManager.Inst.PlayIntro();
+        Game.Inst.soundManager.PlayIntro();
     }
 }

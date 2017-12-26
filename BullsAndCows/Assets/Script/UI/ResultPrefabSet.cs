@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ResultPrefabSet : Set {
+public class ResultPrefabSet : MonoBehaviour {
 
     [SerializeField]
     private Text    Try,

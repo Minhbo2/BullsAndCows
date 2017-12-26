@@ -2,67 +2,38 @@
 
 public class UISetManager :Set {
 
-    private static UISetManager m_Inst;
-    public static UISetManager Inst {get { return m_Inst; }}
 
     [SerializeField]
     GameObject Holder;
 
-    public GamePanelSet GPSet;
-    public TutorialSet TSet;
-    public MainMenuSet MMSet;
-    public SummarySet SumSet;
-    public SplashIntroSet SISet;
+    private Set newSet = null;
 
 
 
-	void Start () {
-        if (m_Inst == null)
-            m_Inst = this;
-    }
-
-
-
-    public void Init()
+    public void NextActiveSet(string setName)
     {
-        SISet = GetSet(SISet);
-    }
+        if (newSet != null)
+            newSet.CloseSet();
 
-    public void GetTutorialSet()
-    {
-        TSet = GetSet(TSet);
-    }
+        switch (setName)
+        {
+           case "Intro":
+                newSet = SetManager.OpenSet<SplashIntroSet>();
+                break;
+            case "Main Menu":
+                newSet = SetManager.OpenSet<MainMenuSet>();
+                break;
+            case "Tutorial":
+                newSet = SetManager.OpenSet<TutorialSet>();
+                break;
+            case "Game Set":
+                newSet = SetManager.OpenSet<GamePanelSet>();
+                break;
+            case "Summary":
+                newSet = SetManager.OpenSet<SummarySet>();
+                break;
+        }
 
-
-    public void GetMainMenuSet()
-    {
-        MMSet = GetSet(MMSet);
-    }
-
-
-
-    public void GetGameSet()
-    {
-        GPSet = GetSet(GPSet);
-    }
-
-
-    public void GetSummarySet()
-    {
-        SumSet = GetSet(SumSet);
-    }
-
-
-
-    T GetSet<T>(T MySet) where T : Set
-    {
-        Set ActiveSet = Holder.GetComponentInChildren<Set>();
-        if (ActiveSet)
-            ActiveSet.CloseSet();
-
-        MySet = SetManager.OpenSet <T> ();
-        MySet.transform.SetParent(Holder.transform, false);
-
-        return MySet;
+        newSet.transform.SetParent(Holder.transform, false);
     }
 }

@@ -25,8 +25,8 @@ public class Game : MonoBehaviour {
     public static Game Inst {get {return m_Inst;}}
     private static Game m_Inst;
 
-    private UISetManager UISetManagerScreen;
-    private SoundManager SoundManagerObj;
+    public UISetManager uiSetManager;
+    public SoundManager soundManager;
 
     public BullsCowsGame BCGame = new BullsCowsGame();
 
@@ -40,7 +40,6 @@ public class Game : MonoBehaviour {
     [Range(1, 3)] 
     public int DifficultyIndex;
 
-    public int RoundIndex = 1;
     public int HighestRoundCompleted;
 
     public Data NewData;
@@ -59,9 +58,9 @@ public class Game : MonoBehaviour {
         switch (CurrentState)
         {
             case GameState.INIT: // setting up all managers and game datas
-                UISetManagerScreen    = SetManager.OpenSet<UISetManager>();
-                SoundManagerObj       = ResourcesManager.Create("Prefab/SoundManager").GetComponent<SoundManager>();
-                UISetManagerScreen.Init();
+                uiSetManager    = SetManager.OpenSet<UISetManager>();
+                soundManager       = ResourcesManager.Create("Prefab/SoundManager").GetComponent<SoundManager>();
+                uiSetManager.NextActiveSet("Intro");
 
                 bool FileExist = File.Exists(Application.persistentDataPath + "bcgame.dat");
                 if (FileExist)
@@ -81,7 +80,7 @@ public class Game : MonoBehaviour {
                 break;
             case GameState.WAITING: // waiting for input from player, reset gameplay
                 LevelTime = 300;
-                RoundIndex = 1;
+                BCGame.CurrentRound = 1;
 
                 bool UserInput = Input.anyKey;
                 TimeToQuit    -= Time.deltaTime;
@@ -96,7 +95,7 @@ public class Game : MonoBehaviour {
                 break;
             case GameState.LOADING: // get neccessary datas for the game to start
                 PlayGame();
-                UISetManagerScreen.GetGameSet();
+                uiSetManager.NextActiveSet("Game Set");
                 if (GameIsRunning)
                     ChangeState(GameState.RUNNING);
                 break;
@@ -104,10 +103,12 @@ public class Game : MonoBehaviour {
                 if (IsRoundStarted)
                 {
                     LevelTime -= Time.deltaTime;
-                    if (BCGame.GetCurrentTry() >= BCGame.GetMaxTry() || LevelTime < 0)
+                    bool bRoundIncomplete = BCGame.GetCurrentTry() > BCGame.GetMaxTry();
+                    if (bRoundIncomplete || LevelTime < 0)
                     {
                         IsRoundStarted = false;
-                        UISetManagerScreen.GetSummarySet();
+                        uiSetManager.NextActiveSet("Summary");
+                        soundManager.PlayWinLose(!bRoundIncomplete);
                         ChangeState(GameState.WAITING);
                     }
                 }
@@ -167,8 +168,8 @@ public class Game : MonoBehaviour {
                     Message = "Please enter a " + BCGame.GetWordLength() + " letters word.";
                     break;
             }
-            SoundManagerObj.SetAudio(SoundManagerObj.Slose);
-            UISetManager.Inst.GPSet.ErrorMessageText(Message);
+            soundManager.SetAudio(soundManager.SError);
+            uiSetManager.GetComponentInChildren<GamePanelSet>().ErrorMessageText(Message);
             return Message;
         }
         else
@@ -180,19 +181,19 @@ public class Game : MonoBehaviour {
 
 
 
-    bool UpdateGameState(string Guess)
+    void UpdateGameState(string Guess)
     {
         BCGame.AddBullAndCow(Guess);
-        UISetManager.Inst.GPSet.OutputResult(BCGame.GetBulls(), BCGame.GetCows());
+        uiSetManager.GetComponentInChildren<GamePanelSet>().OutputResult(BCGame.GetBulls(), BCGame.GetCows());
         BCGame.AddToCurrentTry();
 
-        if (BCGame.IsRoundComplete()) // compare after, if changes then reset
+        bool bRoundCompleted = BCGame.IsRoundComplete();
+        if (bRoundCompleted) // compare after, if changes then reset
         {
-            UISetManagerScreen.GPSet.Pausing(UISetManagerScreen.GPSet.ContinuePanel);
+            uiSetManager.GetComponentInChildren<GamePanelSet>().Pausing(uiSetManager.GetComponentInChildren<GamePanelSet>().ContinuePanel);
             LevelTime += BonusTime;
-            RoundIndex++;
+            BCGame.RoundCompleted();
+            soundManager.PlayWinLose(bRoundCompleted);
         }
-
-        return true;
     }
 }
