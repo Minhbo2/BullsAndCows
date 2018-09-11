@@ -1,6 +1,6 @@
 # Bulls And Cows
 
-...Inspired by many iterations of Bulls And Cows game, I decided to create a version using the same concept for guessing an isogram word instead of digits. The game will randomly pick a hidden isogram word from a word list. It will provide player with the first and the last letters of the hidden word as a hint. Player will fill in the missing letter/s in between to uncovered the hidden word. 
+Inspired by many iterations of Bulls And Cows game, I decided to create a version using the same concept for guessing an isogram word instead of digits. The game will randomly pick a hidden isogram word from a word list. It will provide player with the first and the last letters of the hidden word as a hint. Player will fill in the missing letter/s in between to uncovered the hidden word. 
 
 ## Rules:
 1. Player will be given a number of guesses to fill in the missing letter/s in between within a time limit.
@@ -16,11 +16,11 @@ Unable to solve the hidden word before reaching the time limit or number of gues
 
 ## Credits: 
 #### Art Assets: 
-Kenny at [I'm an inline-style link](www.kenney.nl)
+Kenny at [Kenney Site](https://www.kenney.nl)
 #### Music/Sound Effects:
-Background Music: Perception by Bensound [I'm an inline-style link](https://www.bensound.com/royalty-free-music/corporate-pop)
+Background Music: Perception - [Bensound](https://www.bensound.com/royalty-free-music/corporate-pop)
 Sound Effects:
-* Basketball Buzzer - soundbible [I'm an inline-style link](www.soundbible.com)
-* Button Click - soundbible [I'm an inline-style link](www.soundbible.com)
-* Ding Sound - soundbible [I'm an inline-style link](www.soundbible.com)
-* Sword Collided - soundbible [I'm an inline-style link](www.soundbible.com)
+* Basketball Buzzer - [soundbible](https://www.soundbible.com)
+* Button Click - [soundbible](https://www.soundbible.com)
+* Ding Sound - [soundbible](https://www.soundbible.com)
+* Sword Collided - [soundbible](https://www.soundbible.com) 
